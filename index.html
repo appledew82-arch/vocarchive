@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Siyoon's VOCARHIVE</title>
+  <style>
+    :root{
+      --bg1:#bfe6ff;
+      --bg2:#e9f6ff;
+      --glass: rgba(255,255,255,.34);
+      --glass2: rgba(255,255,255,.18);
+      --stroke: rgba(255,255,255,.55);
+      --text:#0b2440;
+      --muted: rgba(11,36,64,.72);
+      --shadow: 0 18px 50px rgba(0, 50, 110, .18);
+      --shadow2: 0 10px 26px rgba(0, 60, 120, .14);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background:
+        radial-gradient(900px 520px at 18% 12%, rgba(255,255,255,.85), transparent 55%),
+        radial-gradient(700px 480px at 86% 14%, rgba(255,255,255,.65), transparent 58%),
+        radial-gradient(900px 700px at 70% 88%, rgba(255,255,255,.60), transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 14px 60px}
+
+    header{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      padding:14px 16px; border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--glass), var(--glass2));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      position: sticky; top: 10px; z-index: 20;
+    }
+    @media (max-width: 900px){ header{position: static} }
+
+    .brand{display:flex; flex-direction:column; gap:4px}
+    .brand .title{font-weight: 900; letter-spacing:.2px; font-size: 17px}
+    .brand .sub{font-size:12.5px; color:var(--muted)}
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; padding:7px 10px; border-radius: 999px;
+      background: rgba(255,255,255,.45);
+      border: 1px solid rgba(255,255,255,.60);
+      color: rgba(11,36,64,.75);
+    }
+    .nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .tab{
+      border: 1px solid rgba(255,255,255,.62);
+      background: rgba(255,255,255,.40);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform .08s ease, background .12s ease, border-color .12s ease;
+      user-select:none;
+      font-weight: 800;
+      font-size: 12.5px;
+    }
+    .tab:hover{transform: translateY(-1px); background: rgba(255,255,255,.55)}
+    .tab.active{
+      background: rgba(255,255,255,.70);
+      border-color: rgba(255,255,255,.85);
+    }
+
+    .card{
+      margin-top: 14px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(255,255,255,.36), rgba(255,255,255,.18));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 14px;
+    }
+
+    /* HOME: Flash only */
+    .studyWrap{
+      display:flex; flex-direction:column; gap:12px;
+      min-height: calc(100vh - 150px);
+    }
+    .studyTop{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
+    .studyTop .left, .studyTop .right{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    select, input, textarea{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.65);
+      background: rgba(255,255,255,.45);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.40);
+      outline: none;
+    }
+    select{padding-right: 34px}
+    button{
+      border: 1px solid rgba(255,255,255,.62);
+      background: rgba(255,255,255,.42);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform .08s ease, background .12s ease, border-color .12s ease;
+      user-select:none;
+      font-weight: 850;
+      font-size: 13px;
+      white-space:nowrap;
+    }
+    button:hover{transform: translateY(-1px); background: rgba(255,255,255,.55)}
+    button:active{transform: translateY(0px) scale(.99)}
+    button.primary{
+      background: rgba(255,255,255,.66);
+      border-color: rgba(255,255,255,.85);
+    }
+    button.ghost{
+      background: rgba(255,255,255,.24);
+    }
+
+    .flash{
+      flex: 1 1 auto;
+      border-radius: 24px;
+      padding: 22px 16px;
+      min-height: 280px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      gap: 12px;
+      background:
+        radial-gradient(700px 260px at 50% 0%, rgba(255,255,255,.68), rgba(255,255,255,.18)),
+        linear-gradient(135deg, rgba(255,255,255,.36), rgba(255,255,255,.18));
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      position: relative;
+      overflow:hidden;
+    }
+    .flash:before{
+      content:"";
+      position:absolute; inset:-60px;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.55), transparent 55%),
+                  radial-gradient(circle at 70% 65%, rgba(255,255,255,.35), transparent 58%);
+      opacity:.85;
+      pointer-events:none;
+    }
+    .flash > *{position:relative; z-index:1}
+    .front{
+      font-size: 30px;
+      font-weight: 950;
+      letter-spacing:.2px;
+    }
+    .back{
+      font-size: 20px;
+      font-weight: 900;
+      color: rgba(11,36,64,.82);
+      display:none;
+      white-space: pre-wrap;
+      line-height:1.55;
+    }
+    .meta{
+      font-size: 12px;
+      color: rgba(11,36,64,.70);
+    }
+    .gradeRow{
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .gradeRow button{flex: 1 1 90px}
+    .divider{height:1px; background: rgba(255,255,255,.55); margin: 10px 0}
+
+    /* MANAGE */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .sectionTitle{
+      margin:0 0 10px;
+      font-size: 13px;
+      letter-spacing:.2px;
+      color: rgba(11,36,64,.88);
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
+    .hint{font-size:12px; color: rgba(11,36,64,.68); line-height:1.45}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .row.right{justify-content:flex-end}
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 560px){ .split{grid-template-columns: 1fr} }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      overflow:hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.55);
+      background: rgba(255,255,255,.20);
+    }
+    th, td{
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.40);
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th{font-size:12px; text-align:left; color: rgba(11,36,64,.78)}
+    tr:last-child td{border-bottom:none}
+
+    .miniBtn{
+      padding: 7px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight:900;
+      box-shadow: none;
+    }
+    .danger{
+      background: rgba(255, 236, 236, .55);
+      border-color: rgba(255, 205, 205, .75);
+    }
+    .kpi{
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+      font-size:12px; color: rgba(11,36,64,.78);
+    }
+    .kpi span{
+      padding: 6px 10px; border-radius: 999px;
+      background: rgba(255,255,255,.45);
+      border: 1px solid rgba(255,255,255,.60);
+    }
+    .toast{
+      position: fixed; right: 18px; bottom: 18px;
+      background: rgba(255,255,255,.74);
+      border: 1px solid rgba(255,255,255,.86);
+      box-shadow: var(--shadow);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: rgba(11,36,64,.86);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display:none;
+      z-index: 50;
+      max-width: 320px;
+    }
+    .muted{color: rgba(11,36,64,.70)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="title">Siyoon's VOCARHIVE</div>
+        <div class="sub">홈: 플래시카드만 · 관리: 입력/붙여넣기/목록 (로컬 저장)</div>
+      </div>
+      <div class="nav">
+        <button class="tab active" id="tabHome">홈(암기)</button>
+        <button class="tab" id="tabManage">관리(입력)</button>
+        <span class="pill" id="pillKpi">—</span>
+      </div>
+    </header>
+
+    <!-- HOME -->
+    <main id="viewHome" class="card">
+      <div class="studyWrap">
+        <div class="studyTop">
+          <div class="left" style="min-width:260px; flex: 1 1 320px;">
+            <select id="direction">
+              <option value="mix">랜덤(양방향)</option>
+              <option value="en2ko">영어 → 뜻</option>
+              <option value="ko2en">뜻 → 영어</option>
+            </select>
+          </div>
+          <div class="right">
+            <button class="primary" id="btnBuild">세션 만들기</button>
+            <button class="primary" id="btnStart">시작</button>
+          </div>
+        </div>
+
+        <div class="flash" id="flash">
+          <div class="meta" id="metaLine">세션을 만들고 시작하세요</div>
+          <div class="front" id="frontText">Siyoon's VOCARHIVE</div>
+          <div class="back" id="backText">단어를 추가하려면 “관리(입력)” 탭으로</div>
+        </div>
+
+        <div class="row right">
+          <button class="primary" id="btnFlip" style="min-width:160px">정답 보기</button>
+          <button class="ghost" id="btnSkip">스킵</button>
+        </div>
+
+        <div class="gradeRow" id="gradeRow" style="display:none">
+          <button class="miniBtn" id="gAgain">Again</button>
+          <button class="miniBtn" id="gHard">Hard</button>
+          <button class="miniBtn primary" id="gGood">Good</button>
+          <button class="miniBtn" id="gEasy">Easy</button>
+        </div>
+
+        <div class="kpi" id="sessionKpi"></div>
+      </div>
+    </main>
+
+    <!-- MANAGE -->
+    <section id="viewManage" class="card" style="display:none">
+      <div class="grid">
+        <div>
+          <h2 class="sectionTitle">
+            <span>단어 추가</span>
+            <span class="kpi" id="kpiLine"></span>
+          </h2>
+
+          <div class="split">
+            <input id="inEN" placeholder="영어 (예: austere)" />
+            <input id="inKO" placeholder="뜻 (예: 엄격한, 금욕적인)" />
+          </div>
+
+          <div class="row right" style="margin-top:10px">
+            <button class="primary" id="btnAdd">추가</button>
+            <button id="btnClearInputs">지우기</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <h2 class="sectionTitle">
+            <span>CSV/TSV 붙여넣기</span>
+            <span class="pill">열 2개: 단어,뜻</span>
+          </h2>
+          <textarea id="bulkArea" placeholder="austere,엄격한
+postpone,미루다
+impromptu,즉흥의"></textarea>
+          <div class="hint">
+            - 쉼표(,), 탭(TSV), 세미콜론(;) 자동 인식<br/>
+            - 첫 줄이 헤더여도 OK (english/meaning/front/back 등)
+          </div>
+          <div class="row right" style="margin-top:10px">
+            <button id="btnPreview">미리보기</button>
+            <button class="primary" id="btnImport">가져와서 추가</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row" style="justify-content:space-between; gap:10px;">
+            <div style="flex:1 1 280px">
+              <input id="search" placeholder="검색: 단어/뜻" />
+            </div>
+            <div class="row right" style="flex: 0 0 auto">
+              <button class="miniBtn" id="btnBackup">백업</button>
+              <button class="miniBtn" id="btnRestore">복원</button>
+              <button class="miniBtn" id="btnExportCSV">CSV</button>
+              <button class="miniBtn danger" id="btnWipe">초기화</button>
+            </div>
+          </div>
+
+          <div style="overflow:auto; margin-top:10px">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:42%">단어</th>
+                  <th style="width:42%">뜻</th>
+                  <th style="width:16%">관리</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="hint" style="margin-top:10px">
+            저장은 <b>브라우저(로컬스토리지)</b>에만 됩니다. 다른 기기/브라우저로 옮기려면 <b>백업</b>을 사용하세요.
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <input type="file" id="fileRestore" accept="application/json" style="display:none" />
+
+  <script>
+    /*****************
+     * Siyoon's VOCARHIVE (Simple UI)
+     * - Home: flashcards only
+     * - Manage: add/import/list (word + meaning only)
+     * - LocalStorage persistence, simplified SRS
+     *****************/
+    const STORAGE_KEY = "vocarhive_v2_simple";
+    const now = () => Date.now();
+    const dayMs = 24*60*60*1000;
+    const $ = (id) => document.getElementById(id);
+
+    const state = {
+      data: null,
+      session: [],
+      idx: 0,
+      showingBack: false,
+      currentSide: "mix",
+    };
+
+    function toast(msg){
+      const t = $("toast");
+      t.textContent = msg;
+      t.style.display = "block";
+      clearTimeout(toast._tm);
+      toast._tm = setTimeout(()=>{ t.style.display="none"; }, 2000);
+    }
+
+    function uid(){
+      return "c_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+    }
+
+    function defaultData(){
+      return { version: 2, createdAt: now(), cards: [] };
+    }
+
+    function load(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        state.data = raw ? JSON.parse(raw) : defaultData();
+        if(!state.data || !Array.isArray(state.data.cards)) state.data = defaultData();
+      }catch(e){
+        state.data = defaultData();
+      }
+    }
+
+    function save(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+    }
+
+    function norm(s){ return (s ?? "").toString().trim(); }
+    function safeText(s){ return (s ?? "").toString().replace(/[<>]/g, c => c === "<" ? "&lt;" : "&gt;"); }
+
+    function isDue(card){
+      return !card.srs || !card.srs.dueAt || card.srs.dueAt <= now();
+    }
+    function isNew(card){
+      return !card.srs || (card.srs.reps ?? 0) === 0;
+    }
+    function lapses(card){ return card?.srs?.lapses ?? 0; }
+
+    function computeKPIs(){
+      const cards = state.data.cards;
+      const total = cards.length;
+      const due = cards.filter(isDue).length;
+      const neu = cards.filter(isNew).length;
+      $("pillKpi").textContent = `전체 ${total} · 오늘 ${due} · 신규 ${neu}`;
+      $("kpiLine").innerHTML = `
+        <span>전체 ${total}</span>
+        <span>오늘 ${due}</span>
+        <span>신규 ${neu}</span>
+      `;
+    }
+
+    function renderTable(){
+      const q = norm($("search").value).toLowerCase();
+      let list = [...state.data.cards];
+
+      if(q){
+        list = list.filter(c=>{
+          const blob = (c.en + " " + c.ko).toLowerCase();
+          return blob.includes(q);
+        });
+      }
+
+      // sort: due first, then newest
+      list.sort((a,b)=>{
+        const aDue = isDue(a) ? 1 : 0;
+        const bDue = isDue(b) ? 1 : 0;
+        if(aDue !== bDue) return bDue - aDue;
+        return (b.createdAt ?? 0) - (a.createdAt ?? 0);
+      });
+
+      const tbody = $("tbody");
+      tbody.innerHTML = "";
+
+      if(list.length === 0){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="3" class="muted">카드가 없어요.</td>`;
+        tbody.appendChild(tr);
+        return;
+      }
+
+      for(const c of list){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><b>${safeText(c.en)}</b></td>
+          <td>${safeText(c.ko)}</td>
+          <td style="white-space:nowrap">
+            <button class="miniBtn" data-act="edit" data-id="${c.id}">수정</button>
+            <button class="miniBtn danger" data-act="del" data-id="${c.id}">삭제</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      tbody.querySelectorAll("button[data-act]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const id = btn.getAttribute("data-id");
+          const act = btn.getAttribute("data-act");
+          if(act === "del") delCard(id);
+          if(act === "edit") editCard(id);
+        });
+      });
+    }
+
+    function addCard(en, ko){
+      en = norm(en); ko = norm(ko);
+      if(!en || !ko) return false;
+
+      // exact duplicate -> skip
+      const dup = state.data.cards.find(c => norm(c.en).toLowerCase()===en.toLowerCase() && norm(c.ko)===ko);
+      if(dup) return "dup";
+
+      state.data.cards.push({
+        id: uid(),
+        en, ko,
+        createdAt: now(),
+        srs: { reps:0, lapses:0, interval:0, ease:2.5, dueAt: now() }
+      });
+      save();
+      return true;
+    }
+
+    function delCard(id){
+      const idx = state.data.cards.findIndex(c=>c.id===id);
+      if(idx < 0) return;
+      const c = state.data.cards[idx];
+      if(!confirm(`삭제할까요?\n\n${c.en} ↔ ${c.ko}`)) return;
+      state.data.cards.splice(idx,1);
+      save();
+      computeKPIs();
+      renderTable();
+      toast("삭제 완료");
+    }
+
+    function editCard(id){
+      const c = state.data.cards.find(x=>x.id===id);
+      if(!c) return;
+      const en = prompt("단어(수정)", c.en);
+      if(en === null) return;
+      const ko = prompt("뜻(수정)", c.ko);
+      if(ko === null) return;
+
+      c.en = norm(en);
+      c.ko = norm(ko);
+      save();
+      computeKPIs();
+      renderTable();
+      toast("수정 완료");
+    }
+
+    /***************
+     * Bulk import
+     ***************/
+    function detectDelimiter(line){
+      if(line.includes("\t")) return "\t";
+      if(line.includes(",")) return ",";
+      if(line.includes(";")) return ";";
+      if(line.includes("|")) return "|";
+      return null;
+    }
+
+    function parseBulk(text){
+      const raw = (text ?? "").toString().trim();
+      if(!raw) return { rows: [], header: null };
+
+      const lines = raw.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+      if(lines.length === 0) return { rows: [], header: null };
+
+      const delim = detectDelimiter(lines[0]) || ",";
+      const rows = lines.map(l => l.split(delim).map(x=>x.trim()));
+
+      // detect header
+      const h = rows[0].map(x=>x.toLowerCase());
+      const headerLikely = h.includes("english") || h.includes("meaning") || h.includes("front") || h.includes("back") || h.includes("en") || h.includes("ko");
+      let header = null;
+      let body = rows;
+
+      if(headerLikely){
+        header = rows[0];
+        body = rows.slice(1);
+      }
+
+      // column mapping (default first two)
+      let enIdx = 0, koIdx = 1;
+      if(header){
+        const H = header.map(x=>x.toLowerCase());
+        const findAny = (arr) => H.findIndex(hh => arr.includes(hh));
+        const iEn = findAny(["english","front","en","단어"]);
+        const iKo = findAny(["meaning","back","ko","뜻","의미"]);
+        if(iEn >= 0) enIdx = iEn;
+        if(iKo >= 0) koIdx = iKo;
+      }
+
+      const parsed = [];
+      for(const r of body){
+        const en = r[enIdx] ?? "";
+        const ko = r[koIdx] ?? "";
+        if(norm(en) && norm(ko)){
+          parsed.push({ en: norm(en), ko: norm(ko) });
+        }
+      }
+      return { rows: parsed, header };
+    }
+
+    function previewBulk(){
+      const { rows, header } = parseBulk($("bulkArea").value);
+      const head = header ? `헤더 감지: ${header.join(" | ")}` : "헤더 없음(첫 두 열 사용)";
+      const sample = rows.slice(0,6).map((r,i)=>`${i+1}. ${r.en} ↔ ${r.ko}`).join("\n");
+      alert(`${head}\n\n미리보기(최대 6개)\n${sample || "(없음)"}\n\n총 ${rows.length}개 감지`);
+    }
+
+    function importBulk(){
+      const { rows } = parseBulk($("bulkArea").value);
+      if(rows.length === 0){ toast("가져올 데이터가 없어요"); return; }
+      let ok=0, dup=0;
+      for(const r of rows){
+        const res = addCard(r.en, r.ko);
+        if(res === true) ok++;
+        else if(res === "dup") dup++;
+      }
+      computeKPIs();
+      renderTable();
+      toast(`추가 ${ok}개${dup?` · 중복 ${dup}개 스킵`:""}`);
+    }
+
+    /***************
+     * Study session (Home)
+     ***************/
+    function resolveSide(){
+      const dir = $("direction").value;
+      if(dir === "mix") return Math.random() < 0.5 ? "en2ko" : "ko2en";
+      return dir;
+    }
+
+    function buildSession(){
+      const due = state.data.cards.filter(isDue);
+      const pool = (due.length > 0) ? due : state.data.cards;
+
+      // shuffle
+      const list = [...pool];
+      for(let i=list.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [list[i],list[j]] = [list[j],list[i]];
+      }
+
+      state.session = list.map(c=>c.id);
+      state.idx = 0;
+      state.showingBack = false;
+
+      if(state.session.length === 0){
+        $("metaLine").textContent = "카드가 없어요. 관리 탭에서 단어를 추가하세요.";
+        toast("카드가 없어요");
+        return;
+      }
+      toast(`세션 ${state.session.length}개`);
+      updateSessionKpi();
+      showCurrent(true);
+    }
+
+    function getCard(id){
+      return state.data.cards.find(c=>c.id===id);
+    }
+
+    function showCurrent(resetFlip){
+      const id = state.session[state.idx];
+      const c = getCard(id);
+      if(!c){ nextCard(); return; }
+
+      if(resetFlip) state.showingBack = false;
+      state.currentSide = resolveSide();
+
+      const n = state.idx + 1;
+      $("metaLine").textContent = `카드 ${n} / ${state.session.length}`;
+      if(state.currentSide === "en2ko"){
+        $("frontText").textContent = c.en;
+        $("backText").textContent = c.ko;
+      }else{
+        $("frontText").textContent = c.ko;
+        $("backText").textContent = c.en;
+      }
+
+      $("backText").style.display = state.showingBack ? "block" : "none";
+      $("btnFlip").textContent = state.showingBack ? "가리기" : "정답 보기";
+      $("gradeRow").style.display = state.showingBack ? "flex" : "none";
+      updateSessionKpi();
+    }
+
+    function flip(){
+      if(state.session.length === 0){ toast("세션을 먼저 만드세요"); return; }
+      state.showingBack = !state.showingBack;
+      showCurrent(false);
+    }
+
+    function nextCard(){
+      if(state.session.length === 0) return;
+      state.idx++;
+      if(state.idx >= state.session.length){
+        $("metaLine").textContent = "세션 완료";
+        $("frontText").textContent = "DONE";
+        $("backText").textContent = "";
+        $("backText").style.display = "none";
+        $("gradeRow").style.display = "none";
+        toast("세션 완료");
+        computeKPIs();
+        renderTable();
+        return;
+      }
+      state.showingBack = false;
+      showCurrent(true);
+    }
+
+    // simplified SM-2-ish scheduling:
+    // 0 Again, 1 Hard, 2 Good, 3 Easy
+    function applyGrade(card, grade){
+      if(!card.srs) card.srs = { reps:0, lapses:0, interval:0, ease:2.5, dueAt: now() };
+      let { reps, lapses, interval, ease } = card.srs;
+
+      const easeDelta = [ -0.20, -0.15, 0.00, +0.10 ][grade];
+      ease = Math.max(1.30, Math.min(3.00, ease + easeDelta));
+
+      if(grade === 0){
+        lapses += 1;
+        interval = 0;
+        card.srs = { reps, lapses, interval, ease, dueAt: now() + 10*60*1000 }; // 10 min
+        return;
+      }
+
+      reps += 1;
+      if(reps === 1){
+        interval = 1;
+      }else if(reps === 2){
+        interval = (grade === 1) ? 2 : 3;
+      }else{
+        const mult = (grade === 1) ? (ease * 1.10)
+                   : (grade === 2) ? (ease * 1.30)
+                                   : (ease * 1.55);
+        interval = Math.max(interval + 1, Math.round(interval * mult));
+      }
+      interval = Math.min(interval, 3650);
+      card.srs = { reps, lapses, interval, ease, dueAt: now() + interval*dayMs };
+    }
+
+    function grade(gradeNum){
+      if(state.session.length === 0) return;
+      const c = getCard(state.session[state.idx]);
+      if(!c){ nextCard(); return; }
+      applyGrade(c, gradeNum);
+      save();
+      nextCard();
+    }
+
+    function updateSessionKpi(){
+      const total = state.session.length;
+      const n = total ? (state.idx + 1) : 0;
+      const left = total ? (total - state.idx) : 0;
+      $("sessionKpi").innerHTML = total
+        ? `<span>진행 ${Math.min(n,total)}/${total}</span><span>남은 ${left}</span><span>방향 ${$("direction").value}</span>`
+        : `<span>세션 없음</span>`;
+    }
+
+    /***************
+     * Backup / Restore / CSV / Wipe
+     ***************/
+    function download(filename, content, mime="application/octet-stream"){
+      const blob = new Blob([content], {type: mime});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
+    }
+    function fmtDate(ts){
+      const d = new Date(ts);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const da = String(d.getDate()).padStart(2,"0");
+      return `${y}-${m}-${da}`;
+    }
+    function backup(){
+      download(`Siyoons_VOCARHIVE_backup_${fmtDate(now())}.json`, JSON.stringify(state.data, null, 2), "application/json");
+      toast("백업 저장");
+    }
+    function restoreFromFile(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const obj = JSON.parse(reader.result);
+          if(!obj || !Array.isArray(obj.cards)) throw new Error("invalid");
+          state.data = obj;
+          save();
+          computeKPIs();
+          renderTable();
+          toast("복원 완료");
+        }catch(e){
+          alert("복원 실패: JSON 형식/데이터가 올바르지 않아요.");
+        }
+      };
+      reader.readAsText(file);
+    }
+    function exportCSV(){
+      const rows = [];
+      rows.push(["word","meaning"].join(","));
+      for(const c of state.data.cards){
+        const line = [
+          `"${(c.en||"").replaceAll('"','""')}"`,
+          `"${(c.ko||"").replaceAll('"','""')}"`
+        ].join(",");
+        rows.push(line);
+      }
+      download(`Siyoons_VOCARHIVE_${fmtDate(now())}.csv`, rows.join("\n"), "text/csv;charset=utf-8");
+      toast("CSV 저장");
+    }
+    function wipeAll(){
+      if(!confirm("정말 전체 초기화할까요?\n(로컬 저장된 모든 카드 삭제)")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      load();
+      computeKPIs();
+      renderTable();
+      state.session = [];
+      state.idx = 0;
+      state.showingBack = false;
+      $("metaLine").textContent = "세션을 만들고 시작하세요";
+      $("frontText").textContent = "Siyoon's VOCARHIVE";
+      $("backText").textContent = "단어를 추가하려면 “관리(입력)” 탭으로";
+      $("backText").style.display = "none";
+      $("gradeRow").style.display = "none";
+      updateSessionKpi();
+      toast("초기화 완료");
+    }
+
+    /***************
+     * Tabs
+     ***************/
+    function setTab(which){
+      const isHome = which === "home";
+      $("viewHome").style.display = isHome ? "block" : "none";
+      $("viewManage").style.display = isHome ? "none" : "block";
+      $("tabHome").classList.toggle("active", isHome);
+      $("tabManage").classList.toggle("active", !isHome);
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    /***************
+     * Init & wiring
+     ***************/
+    function init(){
+      load();
+      computeKPIs();
+      renderTable();
+      updateSessionKpi();
+
+      // tabs
+      $("tabHome").addEventListener("click", ()=>setTab("home"));
+      $("tabManage").addEventListener("click", ()=>setTab("manage"));
+
+      // manage actions
+      $("btnAdd").addEventListener("click", ()=>{
+        const res = addCard($("inEN").value, $("inKO").value);
+        if(res === true){
+          $("inEN").value = "";
+          $("inKO").value = "";
+          computeKPIs();
+          renderTable();
+          toast("추가 완료");
+          $("inEN").focus();
+        }else if(res === "dup"){
+          toast("중복이라 스킵");
+        }else{
+          toast("단어/뜻 둘 다 입력");
+        }
+      });
+      $("btnClearInputs").addEventListener("click", ()=>{
+        $("inEN").value = "";
+        $("inKO").value = "";
+        toast("지움");
+      });
+      $("btnPreview").addEventListener("click", previewBulk);
+      $("btnImport").addEventListener("click", ()=>{
+        importBulk();
+        computeKPIs();
+      });
+      $("search").addEventListener("input", renderTable);
+
+      $("btnBackup").addEventListener("click", backup);
+      $("btnRestore").addEventListener("click", ()=>$("fileRestore").click());
+      $("fileRestore").addEventListener("change", (e)=>{
+        const file = e.target.files?.[0];
+        if(file) restoreFromFile(file);
+        e.target.value = "";
+      });
+      $("btnExportCSV").addEventListener("click", exportCSV);
+      $("btnWipe").addEventListener("click", wipeAll);
+
+      // home actions
+      $("btnBuild").addEventListener("click", buildSession);
+      $("btnStart").addEventListener("click", ()=>{
+        if(state.session.length === 0) buildSession();
+        if(state.session.length > 0) showCurrent(true);
+      });
+      $("btnFlip").addEventListener("click", flip);
+      $("btnSkip").addEventListener("click", nextCard);
+
+      $("gAgain").addEventListener("click", ()=>grade(0));
+      $("gHard").addEventListener("click", ()=>grade(1));
+      $("gGood").addEventListener("click", ()=>grade(2));
+      $("gEasy").addEventListener("click", ()=>grade(3));
+
+      // hotkeys (home)
+      document.addEventListener("keydown", (e)=>{
+        const homeVisible = $("viewHome").style.display !== "none";
+        if(!homeVisible) return;
+        if(e.key === " "){
+          e.preventDefault();
+          flip();
+        }
+        if($("gradeRow").style.display !== "none"){
+          if(e.key === "1") grade(0);
+          if(e.key === "2") grade(1);
+          if(e.key === "3") grade(2);
+          if(e.key === "4") grade(3);
+          if(e.key.toLowerCase() === "n") nextCard();
+        }
+      });
+
+      // first run hint
+      if(state.data.cards.length === 0){
+        $("metaLine").textContent = "카드가 없어요. 관리 탭에서 단어를 추가하세요.";
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
