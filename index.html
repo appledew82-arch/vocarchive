@@ -1,824 +1,263 @@
-<!doctype html>
+<!-- index.html -->
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#bfe6ff">
-
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Siyoon's VOCARCHIVE</title>
-  <style>
-    :root{
-      --bg1:#bfe6ff;
-      --bg2:#e9f6ff;
-      --glass: rgba(255,255,255,.34);
-      --glass2: rgba(255,255,255,.18);
-      --stroke: rgba(255,255,255,.55);
-      --text:#0b2440;
-      --muted: rgba(11,36,64,.72);
-      --shadow: 0 18px 50px rgba(0, 50, 110, .18);
-      --shadow2: 0 10px 26px rgba(0, 60, 120, .14);
-      --radius: 18px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      background:
-        radial-gradient(900px 520px at 18% 12%, rgba(255,255,255,.85), transparent 55%),
-        radial-gradient(700px 480px at 86% 14%, rgba(255,255,255,.65), transparent 58%),
-        radial-gradient(900px 700px at 70% 88%, rgba(255,255,255,.60), transparent 55%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
-      overflow-x:hidden;
-    }
-    .wrap{max-width:1100px; margin:0 auto; padding:18px 14px 60px}
-
-    header{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      padding:14px 16px; border-radius: var(--radius);
-      background: linear-gradient(135deg, var(--glass), var(--glass2));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      position: sticky; top: 10px; z-index: 20;
-    }
-    @media (max-width: 900px){ header{position: static} }
-
-    .brand .title{font-weight: 900; letter-spacing:.2px; font-size: 17px}
-
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      font-size:12px; padding:7px 10px; border-radius: 999px;
-      background: rgba(255,255,255,.45);
-      border: 1px solid rgba(255,255,255,.60);
-      color: rgba(11,36,64,.75);
-    }
-    .nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; align-items:center}
-    .tab{
-      border: 1px solid rgba(255,255,255,.62);
-      background: rgba(255,255,255,.40);
-      color: var(--text);
-      padding: 9px 12px;
-      border-radius: 999px;
-      cursor:pointer;
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: transform .08s ease, background .12s ease, border-color .12s ease;
-      user-select:none;
-      font-weight: 900;
-      font-size: 12.5px;
-      text-transform: lowercase;
-    }
-    .tab:hover{transform: translateY(-1px); background: rgba(255,255,255,.55)}
-    .tab.active{
-      background: rgba(255,255,255,.70);
-      border-color: rgba(255,255,255,.85);
-    }
-
-    .card{
-      margin-top: 14px;
-      border-radius: var(--radius);
-      background: linear-gradient(135deg, rgba(255,255,255,.36), rgba(255,255,255,.18));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      padding: 14px;
-    }
-
-    /* HOME */
-    .studyWrap{
-      display:flex; flex-direction:column; gap:12px;
-      min-height: calc(100vh - 140px);
-    }
-    .studyTop{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
-    }
-    .studyTop .left, .studyTop .right{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
-    select, input, textarea{
-      width:100%;
-      padding: 11px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.65);
-      background: rgba(255,255,255,.45);
-      color: var(--text);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.40);
-      outline: none;
-    }
-    select{padding-right: 34px}
-    button{
-      border: 1px solid rgba(255,255,255,.62);
-      background: rgba(255,255,255,.42);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 14px;
-      cursor:pointer;
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: transform .08s ease, background .12s ease, border-color .12s ease;
-      user-select:none;
-      font-weight: 900;
-      font-size: 13px;
-      white-space:nowrap;
-    }
-    button:hover{transform: translateY(-1px); background: rgba(255,255,255,.55)}
-    button:active{transform: translateY(0px) scale(.99)}
-    button.primary{
-      background: rgba(255,255,255,.66);
-      border-color: rgba(255,255,255,.85);
-    }
-    button.ghost{ background: rgba(255,255,255,.24); }
-
-    .flash{
-      flex: 1 1 auto;
-      border-radius: 24px;
-      padding: 22px 16px;
-      min-height: 280px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      text-align:center;
-      gap: 12px;
-      background:
-        radial-gradient(700px 260px at 50% 0%, rgba(255,255,255,.68), rgba(255,255,255,.18)),
-        linear-gradient(135deg, rgba(255,255,255,.36), rgba(255,255,255,.18));
-      border: 1px solid rgba(255,255,255,.62);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      position: relative;
-      overflow:hidden;
-    }
-    .flash:before{
-      content:"";
-      position:absolute; inset:-60px;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.55), transparent 55%),
-                  radial-gradient(circle at 70% 65%, rgba(255,255,255,.35), transparent 58%);
-      opacity:.85;
-      pointer-events:none;
-    }
-    .flash > *{position:relative; z-index:1}
-    .front{
-      font-size: 30px;
-      font-weight: 950;
-      letter-spacing:.2px;
-    }
-    .back{
-      font-size: 20px;
-      font-weight: 900;
-      color: rgba(11,36,64,.82);
-      display:none;
-      white-space: pre-wrap;
-      line-height:1.55;
-    }
-    .meta{
-      font-size: 12px;
-      color: rgba(11,36,64,.70);
-    }
-    .kpi{
-      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
-      font-size:12px; color: rgba(11,36,64,.78);
-    }
-    .kpi span{
-      padding: 6px 10px; border-radius: 999px;
-      background: rgba(255,255,255,.45);
-      border: 1px solid rgba(255,255,255,.60);
-    }
-    .divider{height:1px; background: rgba(255,255,255,.55); margin: 10px 0}
-
-    /* LIST */
-    .sectionTitle{
-      margin:0 0 10px;
-      font-size: 13px;
-      letter-spacing:.2px;
-      color: rgba(11,36,64,.88);
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-    }
-    .hint{font-size:12px; color: rgba(11,36,64,.68); line-height:1.45}
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .row.right{justify-content:flex-end}
-    .split{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    @media (max-width: 560px){ .split{grid-template-columns: 1fr} }
-
-    table{
-      width:100%;
-      border-collapse: collapse;
-      overflow:hidden;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.55);
-      background: rgba(255,255,255,.20);
-    }
-    th, td{
-      padding: 10px 10px;
-      border-bottom: 1px solid rgba(255,255,255,.40);
-      vertical-align: top;
-      font-size: 13px;
-    }
-    th{font-size:12px; text-align:left; color: rgba(11,36,64,.78)}
-    tr:last-child td{border-bottom:none}
-
-    .miniBtn{
-      padding: 7px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight:900;
-      box-shadow: none;
-    }
-    .danger{
-      background: rgba(255, 236, 236, .55);
-      border-color: rgba(255, 205, 205, .75);
-    }
-    .toast{
-      position: fixed; right: 18px; bottom: 18px;
-      background: rgba(255,255,255,.74);
-      border: 1px solid rgba(255,255,255,.86);
-      box-shadow: var(--shadow);
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-size: 13px;
-      color: rgba(11,36,64,.86);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      display:none;
-      z-index: 50;
-      max-width: 320px;
-    }
-    .muted{color: rgba(11,36,64,.70)}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Siyoon's VOCARCHIVE</title>
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:linear-gradient(135deg,#bfe6ff,#e9f6ff);
+}
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;
+  background:rgba(255,255,255,.4);
+  backdrop-filter:blur(10px);
+}
+button,select,input,textarea{
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.6);
+  padding:8px;
+  background:rgba(255,255,255,.6);
+}
+.tab{cursor:pointer;margin-right:6px;}
+.tab.active{background:white;font-weight:bold;}
+.card{
+  margin:16px;
+  padding:16px;
+  border-radius:20px;
+  background:rgba(255,255,255,.4);
+  backdrop-filter:blur(12px);
+}
+.hidden{display:none;}
+.flash{
+  text-align:center;
+  min-height:200px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.front{font-size:28px;font-weight:bold;}
+.back{font-size:20px;margin-top:10px;display:none;}
+.days-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+  gap:8px;
+}
+table{width:100%;border-collapse:collapse;}
+td,th{padding:6px;border-bottom:1px solid rgba(0,0,0,.1);}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand"><div class="title">Siyoon's VOCARCHIVE</div></div>
-      <div class="nav">
-        <button class="tab active" id="tabHome">home</button>
-        <button class="tab" id="tabList">list</button>
-        <span class="pill" id="pillKpi">—</span>
-      </div>
-    </header>
 
-    <!-- HOME -->
-    <main id="viewHome" class="card">
-      <div class="studyWrap">
-        <div class="studyTop">
-          <div class="left" style="min-width:260px; flex: 1 1 320px;">
-            <select id="direction">
-              <option value="mix">랜덤(양방향)</option>
-              <option value="en2ko">영어 → 뜻</option>
-              <option value="ko2en">뜻 → 영어</option>
-            </select>
-          </div>
-          <div class="right">
-            <button class="primary" id="btnStart">start</button>
-          </div>
-        </div>
-
-        <div class="flash" id="flash">
-          <div class="meta" id="metaLine"></div>
-          <div class="front" id="frontText">Siyoon's VOCARCHIVE</div>
-          <div class="back" id="backText"></div>
-        </div>
-
-        <div class="row right">
-          <button class="primary" id="btnFlip" style="min-width:160px">flip</button>
-          <button class="ghost" id="btnNext">next</button>
-        </div>
-
-        <div class="kpi" id="sessionKpi"></div>
-      </div>
-    </main>
-
-    <!-- LIST -->
-    <section id="viewList" class="card" style="display:none">
-      <h2 class="sectionTitle">
-        <span>add</span>
-        <span class="kpi" id="kpiLine"></span>
-      </h2>
-
-      <div class="split">
-        <input id="inEN" placeholder="word (e.g., austere)" />
-        <input id="inKO" placeholder="meaning (e.g., 엄격한)" />
-      </div>
-
-      <div class="row right" style="margin-top:10px">
-        <button class="primary" id="btnAdd">add</button>
-        <button id="btnClearInputs">clear</button>
-      </div>
-
-      <div class="divider"></div>
-
-      <h2 class="sectionTitle">
-        <span>paste (csv/tsv)</span>
-        <span class="pill">2 columns: word, meaning</span>
-      </h2>
-      <textarea id="bulkArea" placeholder="austere,엄격한
-postpone,미루다
-impromptu,즉흥의"></textarea>
-      <div class="hint">
-        - 쉼표(,), 탭(TSV), 세미콜론(;) 자동 인식<br/>
-        - 첫 줄이 헤더여도 OK (english/meaning/front/back 등)
-      </div>
-      <div class="row right" style="margin-top:10px">
-        <button id="btnPreview">preview</button>
-        <button class="primary" id="btnImport">import</button>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="row" style="justify-content:space-between; gap:10px;">
-        <div style="flex:1 1 280px">
-          <input id="search" placeholder="search" />
-        </div>
-        <div class="row right" style="flex: 0 0 auto">
-          <button class="miniBtn" id="btnBackup">backup</button>
-          <button class="miniBtn" id="btnRestore">restore</button>
-          <button class="miniBtn" id="btnExportCSV">csv</button>
-          <button class="miniBtn danger" id="btnWipe">wipe</button>
-        </div>
-      </div>
-
-      <div style="overflow:auto; margin-top:10px">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:45%">word</th>
-              <th style="width:45%">meaning</th>
-              <th style="width:10%">manage</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-    </section>
+<header>
+  <div><b>Siyoon's VOCARCHIVE</b></div>
+  <div>
+    <button class="tab active" id="tabHome">home</button>
+    <button class="tab" id="tabDays">days</button>
+    <button class="tab" id="tabList">list</button>
   </div>
+</header>
 
-  <div class="toast" id="toast"></div>
-  <input type="file" id="fileRestore" accept="application/json" style="display:none" />
+<div id="homeView" class="card">
+  <div>
+    <select id="source">
+      <option value="days">days</option>
+      <option value="list">list</option>
+      <option value="both">both</option>
+    </select>
+    <button id="startBtn">start</button>
+  </div>
+  <div class="flash">
+    <div id="meta"></div>
+    <div class="front" id="front">Siyoon's VOCARCHIVE</div>
+    <div class="back" id="back"></div>
+  </div>
+  <button id="flipBtn">flip</button>
+  <button id="nextBtn">next</button>
+</div>
 
-  <script>
-    /*****************
-     * Siyoon's VOCARCHIVE (Ultra Simple Study)
-     * - No difficulty buttons, no SRS
-     * - Study = Flip / Next only
-     * - Start always creates a new randomized session
-     *****************/
-    const STORAGE_KEY = "vocarchive_v4_ultra_simple";
-    const $ = (id) => document.getElementById(id);
+<div id="daysView" class="card hidden">
+  <div>
+    <button id="selectAll">전체 선택</button>
+    <button id="clearAll">초기화</button>
+    <button id="goStudy">study!</button>
+  </div>
+  <div class="days-grid" id="daysGrid"></div>
+</div>
 
-    const state = {
-      data: null,
-      session: [],
-      idx: 0,
-      showingBack: false,
-    };
+<div id="listView" class="card hidden">
+  <div>
+    <input id="wordInput" placeholder="word">
+    <input id="meaningInput" placeholder="meaning">
+    <button id="addBtn">add</button>
+  </div>
+  <textarea id="bulkArea" placeholder="emaciated 야윈, 수척한"></textarea>
+  <button id="importBtn">import</button>
+  <table>
+    <thead><tr><th>word</th><th>meaning</th><th></th></tr></thead>
+    <tbody id="listTable"></tbody>
+  </table>
+</div>
 
-    const now = () => Date.now();
+<script>
+const STORAGE="vocarchive_list";
+let myCards=JSON.parse(localStorage.getItem(STORAGE)||"[]");
+let daysData={};
+let selectedDays=new Set();
+let session=[];
+let idx=0;
+let showBack=false;
 
-    function toast(msg){
-      const t = $("toast");
-      t.textContent = msg;
-      t.style.display = "block";
-      clearTimeout(toast._tm);
-      toast._tm = setTimeout(()=>{ t.style.display="none"; }, 1600);
-    }
+async function loadDays(){
+  try{
+    const res=await fetch("days.json");
+    daysData=await res.json();
+  }catch(e){daysData={};}
+  renderDays();
+}
+loadDays();
 
-    function uid(){
-      return "c_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-    }
+function save(){localStorage.setItem(STORAGE,JSON.stringify(myCards));}
 
-    function defaultData(){
-      return { version: 4, createdAt: now(), cards: [] };
-    }
+function renderDays(){
+  const grid=document.getElementById("daysGrid");
+  grid.innerHTML="";
+  for(let i=1;i<=60;i++){
+    const key="day"+i;
+    const div=document.createElement("div");
+    div.innerHTML=`<label><input type="checkbox" data-day="${key}"> ${key}</label>`;
+    grid.appendChild(div);
+  }
+  grid.querySelectorAll("input").forEach(cb=>{
+    cb.onchange=()=>{cb.checked?selectedDays.add(cb.dataset.day):selectedDays.delete(cb.dataset.day);}
+  });
+}
 
-    function load(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        state.data = raw ? JSON.parse(raw) : defaultData();
-        if(!state.data || !Array.isArray(state.data.cards)) state.data = defaultData();
-      }catch(e){
-        state.data = defaultData();
+function buildSession(){
+  let pool=[];
+  const src=document.getElementById("source").value;
+  if(src==="days"||src==="both"){
+    selectedDays.forEach(d=>{
+      (daysData[d]||[]).forEach(x=>pool.push(x));
+    });
+  }
+  if(src==="list"||src==="both"){
+    myCards.forEach(x=>pool.push(x));
+  }
+  session=pool.sort(()=>Math.random()-0.5);
+  idx=0;
+  showBack=false;
+  showCard();
+}
+
+function showCard(){
+  if(session.length===0){
+    document.getElementById("front").textContent="Siyoon's VOCARCHIVE";
+    document.getElementById("back").style.display="none";
+    return;
+  }
+  if(idx>=session.length){
+    document.getElementById("front").textContent="DONE";
+    document.getElementById("back").style.display="none";
+    return;
+  }
+  const card=session[idx];
+  document.getElementById("meta").textContent=(idx+1)+" / "+session.length;
+  document.getElementById("front").textContent=card.word;
+  document.getElementById("back").textContent=card.meaning;
+  document.getElementById("back").style.display=showBack?"block":"none";
+}
+
+document.getElementById("flipBtn").onclick=()=>{
+  showBack=!showBack;
+  document.getElementById("back").style.display=showBack?"block":"none";
+};
+document.getElementById("nextBtn").onclick=()=>{
+  idx++;
+  showBack=false;
+  showCard();
+};
+document.getElementById("startBtn").onclick=buildSession;
+
+document.getElementById("addBtn").onclick=()=>{
+  const w=wordInput.value.trim();
+  const m=meaningInput.value.trim();
+  if(!w||!m)return;
+  myCards.push({word:w,meaning:m});
+  save();
+  renderList();
+};
+
+function parseBulk(text){
+  const lines=text.split(/\n+/);
+  const result=[];
+  lines.forEach(l=>{
+    l=l.trim();
+    if(!l)return;
+    if(l.includes("|")){
+      const [w,...rest]=l.split("|");
+      result.push({word:w.trim(),meaning:rest.join("|").trim()});
+    }else{
+      const match=l.match(/^(.+?)\s+([가-힣].*)$/);
+      if(match){
+        result.push({word:match[1].trim(),meaning:match[2].trim()});
       }
     }
+  });
+  return result;
+}
 
-    function save(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
-    }
+document.getElementById("importBtn").onclick=()=>{
+  const rows=parseBulk(bulkArea.value);
+  rows.forEach(r=>myCards.push(r));
+  save();
+  renderList();
+};
 
-    function norm(s){ return (s ?? "").toString().trim(); }
-    function safeText(s){ return (s ?? "").toString().replace(/[<>]/g, c => c === "<" ? "&lt;" : "&gt;"); }
+function renderList(){
+  const tbody=document.getElementById("listTable");
+  tbody.innerHTML="";
+  myCards.forEach((c,i)=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${c.word}</td><td>${c.meaning}</td><td><button data-i="${i}">del</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll("button").forEach(b=>{
+    b.onclick=()=>{myCards.splice(b.dataset.i,1);save();renderList();}
+  });
+}
+renderList();
 
-    function computeKPIs(){
-      const total = state.data.cards.length;
-      $("pillKpi").textContent = `total ${total}`;
-      $("kpiLine").innerHTML = `<span>total ${total}</span>`;
-    }
+document.getElementById("selectAll").onclick=()=>{
+  selectedDays.clear();
+  for(let i=1;i<=60;i++)selectedDays.add("day"+i);
+  document.querySelectorAll("#daysGrid input").forEach(cb=>cb.checked=true);
+};
+document.getElementById("clearAll").onclick=()=>{
+  selectedDays.clear();
+  document.querySelectorAll("#daysGrid input").forEach(cb=>cb.checked=false);
+};
+document.getElementById("goStudy").onclick=()=>{
+  setTab("home");
+};
 
-    function renderTable(){
-      const q = norm($("search").value).toLowerCase();
-      let list = [...state.data.cards];
+function setTab(t){
+  homeView.classList.add("hidden");
+  daysView.classList.add("hidden");
+  listView.classList.add("hidden");
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  if(t==="home"){homeView.classList.remove("hidden");tabHome.classList.add("active");}
+  if(t==="days"){daysView.classList.remove("hidden");tabDays.classList.add("active");}
+  if(t==="list"){listView.classList.remove("hidden");tabList.classList.add("active");}
+}
+tabHome.onclick=()=>setTab("home");
+tabDays.onclick=()=>setTab("days");
+tabList.onclick=()=>setTab("list");
+</script>
 
-      if(q){
-        list = list.filter(c=>{
-          const blob = (c.en + " " + c.ko).toLowerCase();
-          return blob.includes(q);
-        });
-      }
-
-      // newest first
-      list.sort((a,b)=> (b.createdAt ?? 0) - (a.createdAt ?? 0));
-
-      const tbody = $("tbody");
-      tbody.innerHTML = "";
-
-      if(list.length === 0){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="3" class="muted">empty</td>`;
-        tbody.appendChild(tr);
-        return;
-      }
-
-      for(const c of list){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><b>${safeText(c.en)}</b></td>
-          <td>${safeText(c.ko)}</td>
-          <td style="white-space:nowrap">
-            <button class="miniBtn" data-act="edit" data-id="${c.id}">edit</button>
-            <button class="miniBtn danger" data-act="del" data-id="${c.id}">del</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-
-      tbody.querySelectorAll("button[data-act]").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
-          const id = btn.getAttribute("data-id");
-          const act = btn.getAttribute("data-act");
-          if(act === "del") delCard(id);
-          if(act === "edit") editCard(id);
-        });
-      });
-    }
-
-    function addCard(en, ko){
-      en = norm(en); ko = norm(ko);
-      if(!en || !ko) return false;
-
-      const dup = state.data.cards.find(c => norm(c.en).toLowerCase()===en.toLowerCase() && norm(c.ko)===ko);
-      if(dup) return "dup";
-
-      state.data.cards.push({ id: uid(), en, ko, createdAt: now() });
-      save();
-      return true;
-    }
-
-    function delCard(id){
-      const idx = state.data.cards.findIndex(c=>c.id===id);
-      if(idx < 0) return;
-      state.data.cards.splice(idx,1);
-      save();
-      computeKPIs();
-      renderTable();
-      toast("deleted");
-    }
-
-    function editCard(id){
-      const c = state.data.cards.find(x=>x.id===id);
-      if(!c) return;
-      const en = prompt("word", c.en);
-      if(en === null) return;
-      const ko = prompt("meaning", c.ko);
-      if(ko === null) return;
-      c.en = norm(en);
-      c.ko = norm(ko);
-      save();
-      computeKPIs();
-      renderTable();
-      toast("saved");
-    }
-
-    /***************
-     * Bulk import (2 columns only)
-     ***************/
-    function detectDelimiter(line){
-      if(line.includes("\t")) return "\t";
-      if(line.includes(",")) return ",";
-      if(line.includes(";")) return ";";
-      if(line.includes("|")) return "|";
-      return null;
-    }
-
-    function parseBulk(text){
-      const raw = (text ?? "").toString().trim();
-      if(!raw) return { rows: [], header: null };
-
-      const lines = raw.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-      if(lines.length === 0) return { rows: [], header: null };
-
-      const delim = detectDelimiter(lines[0]) || ",";
-      const rows = lines.map(l => l.split(delim).map(x=>x.trim()));
-
-      // optional header detection
-      const h = rows[0].map(x=>x.toLowerCase());
-      const headerLikely = h.includes("english") || h.includes("meaning") || h.includes("word") || h.includes("뜻") || h.includes("의미");
-      let body = rows;
-      if(headerLikely) body = rows.slice(1);
-
-      const parsed = [];
-      for(const r of body){
-        const en = r[0] ?? "";
-        const ko = r[1] ?? "";
-        if(norm(en) && norm(ko)) parsed.push({ en: norm(en), ko: norm(ko) });
-      }
-      return { rows: parsed };
-    }
-
-    function previewBulk(){
-      const { rows } = parseBulk($("bulkArea").value);
-      const sample = rows.slice(0,6).map((r,i)=>`${i+1}. ${r.en} ↔ ${r.ko}`).join("\n");
-      alert(`${sample || "(empty)"}\n\ntotal ${rows.length}`);
-    }
-
-    function importBulk(){
-      const { rows } = parseBulk($("bulkArea").value);
-      if(rows.length === 0){ toast("nothing"); return; }
-      let ok=0, dup=0;
-      for(const r of rows){
-        const res = addCard(r.en, r.ko);
-        if(res === true) ok++;
-        else if(res === "dup") dup++;
-      }
-      computeKPIs();
-      renderTable();
-      toast(`+${ok}${dup?` (dup ${dup})`:""}`);
-    }
-
-    /***************
-     * Study (Flip / Next only)
-     ***************/
-    function resolveSide(){
-      const dir = $("direction").value;
-      if(dir === "mix") return Math.random() < 0.5 ? "en2ko" : "ko2en";
-      return dir;
-    }
-
-    function buildSessionRandom(){
-      const cards = state.data.cards;
-      if(cards.length === 0){
-        // keep home clean (no empty message)
-        state.session = [];
-        state.idx = 0;
-        state.showingBack = false;
-        $("metaLine").textContent = "";
-        $("frontText").textContent = "Siyoon's VOCARCHIVE";
-        $("backText").textContent = "";
-        $("backText").style.display = "none";
-        $("sessionKpi").innerHTML = "";
-        toast("empty");
-        return;
-      }
-
-      // shuffle all cards
-      const list = [...cards];
-      for(let i=list.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [list[i],list[j]] = [list[j],list[i]];
-      }
-
-      state.session = list.map(c=>c.id);
-      state.idx = 0;
-      state.showingBack = false;
-      showCurrent(true);
-      toast(`start ${state.session.length}`);
-    }
-
-    function getCard(id){
-      return state.data.cards.find(c=>c.id===id);
-    }
-
-    function showCurrent(resetFlip){
-      const id = state.session[state.idx];
-      const c = getCard(id);
-      if(!c){ nextCard(); return; }
-
-      if(resetFlip) state.showingBack = false;
-      const side = resolveSide();
-
-      const n = state.idx + 1;
-      $("metaLine").textContent = `${n} / ${state.session.length}`;
-
-      if(side === "en2ko"){
-        $("frontText").textContent = c.en;
-        $("backText").textContent = c.ko;
-      }else{
-        $("frontText").textContent = c.ko;
-        $("backText").textContent = c.en;
-      }
-
-      $("backText").style.display = state.showingBack ? "block" : "none";
-      $("btnFlip").textContent = state.showingBack ? "hide" : "flip";
-      updateSessionKpi();
-    }
-
-    function flip(){
-      if(state.session.length === 0) return;
-      state.showingBack = !state.showingBack;
-      showCurrent(false);
-    }
-
-    function nextCard(){
-      if(state.session.length === 0) return;
-      state.idx++;
-      if(state.idx >= state.session.length){
-        $("metaLine").textContent = "";
-        $("frontText").textContent = "DONE";
-        $("backText").textContent = "";
-        $("backText").style.display = "none";
-        updateSessionKpi(true);
-        toast("done");
-        return;
-      }
-      state.showingBack = false;
-      showCurrent(true);
-    }
-
-    function updateSessionKpi(done=false){
-      const total = state.session.length;
-      if(!total){
-        $("sessionKpi").innerHTML = "";
-        return;
-      }
-      if(done){
-        $("sessionKpi").innerHTML = `<span>done ${total}</span>`;
-        return;
-      }
-      const left = Math.max(0, total - state.idx);
-      $("sessionKpi").innerHTML = `<span>left ${left}</span><span>dir ${$("direction").value}</span>`;
-    }
-
-    /***************
-     * Backup / Restore / CSV / Wipe
-     ***************/
-    function download(filename, content, mime="application/octet-stream"){
-      const blob = new Blob([content], {type: mime});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
-    }
-    function fmtDate(ts){
-      const d = new Date(ts);
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      const da = String(d.getDate()).padStart(2,"0");
-      return `${y}-${m}-${da}`;
-    }
-    function backup(){
-      download(`VOCARCHIVE_backup_${fmtDate(now())}.json`, JSON.stringify(state.data, null, 2), "application/json");
-      toast("backup");
-    }
-    function restoreFromFile(file){
-      const reader = new FileReader();
-      reader.onload = () => {
-        try{
-          const obj = JSON.parse(reader.result);
-          if(!obj || !Array.isArray(obj.cards)) throw new Error("invalid");
-          state.data = obj;
-          save();
-          computeKPIs();
-          renderTable();
-          toast("restored");
-        }catch(e){
-          alert("restore failed");
-        }
-      };
-      reader.readAsText(file);
-    }
-    function exportCSV(){
-      const rows = [];
-      rows.push(["word","meaning"].join(","));
-      for(const c of state.data.cards){
-        rows.push(`"${(c.en||"").replaceAll('"','""')}","${(c.ko||"").replaceAll('"','""')}"`);
-      }
-      download(`VOCARCHIVE_${fmtDate(now())}.csv`, rows.join("\n"), "text/csv;charset=utf-8");
-      toast("csv");
-    }
-    function wipeAll(){
-      if(!confirm("wipe all?")) return;
-      localStorage.removeItem(STORAGE_KEY);
-      load();
-      computeKPIs();
-      renderTable();
-      buildSessionRandom();
-      toast("wiped");
-    }
-
-    /***************
-     * Tabs
-     ***************/
-    function setTab(which){
-      const isHome = which === "home";
-      $("viewHome").style.display = isHome ? "block" : "none";
-      $("viewList").style.display = isHome ? "none" : "block";
-      $("tabHome").classList.toggle("active", isHome);
-      $("tabList").classList.toggle("active", !isHome);
-      window.scrollTo({top:0, behavior:"smooth"});
-    }
-
-    /***************
-     * Init
-     ***************/
-    function init(){
-      load();
-      computeKPIs();
-      renderTable();
-
-      // tabs
-      $("tabHome").addEventListener("click", ()=>setTab("home"));
-      $("tabList").addEventListener("click", ()=>setTab("list"));
-
-      // list
-      $("btnAdd").addEventListener("click", ()=>{
-        const res = addCard($("inEN").value, $("inKO").value);
-        if(res === true){
-          $("inEN").value = "";
-          $("inKO").value = "";
-          computeKPIs();
-          renderTable();
-          toast("added");
-          $("inEN").focus();
-        }else if(res === "dup"){
-          toast("dup");
-        }else{
-          toast("fill");
-        }
-      });
-      $("btnClearInputs").addEventListener("click", ()=>{
-        $("inEN").value = "";
-        $("inKO").value = "";
-        toast("cleared");
-      });
-      $("btnPreview").addEventListener("click", previewBulk);
-      $("btnImport").addEventListener("click", importBulk);
-      $("search").addEventListener("input", renderTable);
-
-      $("btnBackup").addEventListener("click", backup);
-      $("btnRestore").addEventListener("click", ()=>$("fileRestore").click());
-      $("fileRestore").addEventListener("change", (e)=>{
-        const file = e.target.files?.[0];
-        if(file) restoreFromFile(file);
-        e.target.value = "";
-      });
-      $("btnExportCSV").addEventListener("click", exportCSV);
-      $("btnWipe").addEventListener("click", wipeAll);
-
-      // home (start always randomizes)
-      $("btnStart").addEventListener("click", buildSessionRandom);
-      $("btnFlip").addEventListener("click", flip);
-      $("btnNext").addEventListener("click", nextCard);
-
-      // hotkeys (home)
-      document.addEventListener("keydown", (e)=>{
-        const homeVisible = $("viewHome").style.display !== "none";
-        if(!homeVisible) return;
-        if(e.key === " "){
-          e.preventDefault();
-          flip();
-        }
-        if(e.key.toLowerCase() === "n"){
-          nextCard();
-        }
-      });
-
-      // home: keep clean
-      $("metaLine").textContent = "";
-      $("backText").textContent = "";
-      $("backText").style.display = "none";
-      $("sessionKpi").innerHTML = "";
-    }
-
-    init();
-  </script>
 </body>
-
 </html>
-
-
