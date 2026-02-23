@@ -264,7 +264,7 @@
 <body>
   <div class="wrap">
     <header>
-      <div class="brand"><div class="title">Siyoon's VOCARHIVE</div></div>
+      <div class="brand"><div class="title">Siyoon's VOCARCHIVE</div></div>
       <div class="nav">
         <button class="tab active" id="tabHome">home</button>
         <button class="tab" id="tabList">list</button>
@@ -290,7 +290,7 @@
 
         <div class="flash" id="flash">
           <div class="meta" id="metaLine"></div>
-          <div class="front" id="frontText">Siyoon's VOCARHIVE</div>
+          <div class="front" id="frontText">Siyoon's VOCARCHIVE</div>
           <div class="back" id="backText"></div>
         </div>
 
@@ -372,12 +372,12 @@ impromptu,즉흥의"></textarea>
 
   <script>
     /*****************
-     * Siyoon's VOCARHIVE (Ultra Simple Study)
+     * Siyoon's VOCARCHIVE (Ultra Simple Study)
      * - No difficulty buttons, no SRS
      * - Study = Flip / Next only
      * - Start always creates a new randomized session
      *****************/
-    const STORAGE_KEY = "vocarhive_v4_ultra_simple";
+    const STORAGE_KEY = "vocarchive_v4_ultra_simple";
     const $ = (id) => document.getElementById(id);
 
     const state = {
@@ -585,7 +585,7 @@ impromptu,즉흥의"></textarea>
         state.idx = 0;
         state.showingBack = false;
         $("metaLine").textContent = "";
-        $("frontText").textContent = "Siyoon's VOCARHIVE";
+        $("frontText").textContent = "Siyoon's VOCARCHIVE";
         $("backText").textContent = "";
         $("backText").style.display = "none";
         $("sessionKpi").innerHTML = "";
@@ -692,7 +692,7 @@ impromptu,즉흥의"></textarea>
       return `${y}-${m}-${da}`;
     }
     function backup(){
-      download(`VOCARHIVE_backup_${fmtDate(now())}.json`, JSON.stringify(state.data, null, 2), "application/json");
+      download(`VOCARCHIVE_backup_${fmtDate(now())}.json`, JSON.stringify(state.data, null, 2), "application/json");
       toast("backup");
     }
     function restoreFromFile(file){
@@ -718,7 +718,7 @@ impromptu,즉흥의"></textarea>
       for(const c of state.data.cards){
         rows.push(`"${(c.en||"").replaceAll('"','""')}","${(c.ko||"").replaceAll('"','""')}"`);
       }
-      download(`VOCARHIVE_${fmtDate(now())}.csv`, rows.join("\n"), "text/csv;charset=utf-8");
+      download(`VOCARCHIVE_${fmtDate(now())}.csv`, rows.join("\n"), "text/csv;charset=utf-8");
       toast("csv");
     }
     function wipeAll(){
@@ -820,4 +820,5 @@ impromptu,즉흥의"></textarea>
 </body>
 
 </html>
+
 
