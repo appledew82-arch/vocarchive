@@ -1,218 +1,961 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VOCARCHIVE</title>
-<style>
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
-  background:linear-gradient(135deg,#bfe6ff,#eaf7ff);
-}
-header{
-  display:flex;
-  justify-content:space-between;
-  padding:16px;
-  backdrop-filter:blur(20px);
-  background:rgba(255,255,255,0.4);
-}
-.tab{
-  border:none;
-  padding:8px 14px;
-  margin-left:6px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.6);
-  cursor:pointer;
-}
-.active{background:white;font-weight:600;}
-.card{
-  margin:24px auto;
-  max-width:600px;
-  padding:30px;
-  border-radius:30px;
-  background:rgba(255,255,255,0.45);
-  backdrop-filter:blur(25px);
-  text-align:center;
-}
-button{
-  border:none;
-  border-radius:18px;
-  padding:8px 14px;
-  margin:6px;
-  background:rgba(255,255,255,0.7);
-  cursor:pointer;
-}
-.flash{
-  font-size:28px;
-  margin:40px 0;
-  min-height:100px;
-}
-.hidden{display:none;}
-.days-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(70px,1fr));
-  gap:8px;
-  margin-top:15px;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Siyoon's VOCARCHIVE</title>
+  <style>
+    :root{
+      --sky1:#bfe6ff;
+      --sky2:#eaf7ff;
+      --lav:#e9e6ff;
+      --glassA: rgba(255,255,255,.46);
+      --glassB: rgba(255,255,255,.18);
+      --stroke: rgba(255,255,255,.70);
+      --text:#0b2440;
+      --muted: rgba(11,36,64,.70);
+      --shadow: 0 18px 55px rgba(0, 60, 130, .18);
+      --shadow2: 0 10px 28px rgba(0, 60, 120, .14);
+      --r: 24px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background:
+        radial-gradient(900px 520px at 18% 12%, rgba(255,255,255,.92), transparent 56%),
+        radial-gradient(720px 520px at 86% 16%, rgba(255,255,255,.70), transparent 60%),
+        radial-gradient(820px 620px at 74% 88%, rgba(233,230,255,.65), transparent 60%),
+        linear-gradient(160deg, var(--sky1), var(--sky2));
+      overflow-x:hidden;
+    }
+
+    .wrap{max-width:1080px; margin:0 auto; padding:16px 14px 70px}
+
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px 16px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(255,255,255,.55), rgba(255,255,255,.18));
+      border: 1px solid rgba(255,255,255,.75);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: sticky; top: 10px; z-index: 30;
+    }
+    @media (max-width: 900px){ header{position: static} }
+
+    .brand{display:flex; flex-direction:column; gap:4px; min-width:200px}
+    .brand .name{font-weight: 950; letter-spacing:.2px; font-size: 16.5px;}
+    .brand .sub{font-size: 12px; color: rgba(11,36,64,.68);}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; align-items:center}
+    .tab{
+      border: 1px solid rgba(255,255,255,.72);
+      background: rgba(255,255,255,.32);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: transform .08s ease, background .12s ease, border-color .12s ease;
+      user-select:none;
+      font-weight: 950;
+      font-size: 12.5px;
+      text-transform: lowercase;
+      position: relative;
+      overflow:hidden;
+    }
+    .tab::before{
+      content:"";
+      position:absolute; inset:-40px;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.62), transparent 55%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .tab:hover{transform: translateY(-1px); background: rgba(255,255,255,.52)}
+    .tab.active{
+      background: rgba(255,255,255,.72);
+      border-color: rgba(255,255,255,.88);
+    }
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; padding:7px 10px; border-radius: 999px;
+      background: rgba(255,255,255,.44);
+      border: 1px solid rgba(255,255,255,.68);
+      color: rgba(11,36,64,.76);
+      white-space:nowrap;
+      box-shadow: 0 8px 18px rgba(0,60,120,.10);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .card{
+      margin-top: 14px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(255,255,255,.38), rgba(255,255,255,.14));
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 14px;
+      position: relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-80px;
+      background:
+        radial-gradient(circle at 26% 20%, rgba(255,255,255,.66), transparent 58%),
+        radial-gradient(circle at 78% 70%, rgba(255,255,255,.34), transparent 60%);
+      opacity:.75;
+      pointer-events:none;
+    }
+    .card > *{position:relative; z-index:1}
+
+    select, input, textarea{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.75);
+      background: rgba(255,255,255,.46);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.50);
+      outline: none;
+    }
+    textarea{min-height:120px; resize: vertical}
+
+    button{
+      border: 1px solid rgba(255,255,255,.72);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 16px;
+      cursor:pointer;
+      user-select:none;
+      font-weight: 950;
+      font-size: 13px;
+      white-space:nowrap;
+      position: relative;
+      overflow:hidden;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: transform .08s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+    }
+    button::before{
+      content:"";
+      position:absolute; inset:-40px;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.65), transparent 55%);
+      opacity:.55;
+      pointer-events:none;
+    }
+    button:hover{transform: translateY(-1px);}
+    button:active{transform: translateY(0px) scale(.99)}
+
+    .btnPrimary{
+      background: rgba(255,255,255,.72);
+      border-color: rgba(255,255,255,.90);
+      box-shadow: 0 12px 30px rgba(0,60,120,.16);
+    }
+    .btnPrimary:hover{background: rgba(255,255,255,.82)}
+    .btnSoft{
+      background: rgba(255,255,255,.40);
+      box-shadow: 0 10px 24px rgba(0,60,120,.12);
+    }
+    .btnGhost{
+      background: rgba(255,255,255,.26);
+      box-shadow: 0 8px 18px rgba(0,60,120,.10);
+    }
+    .btnDanger{
+      background: rgba(255, 236, 236, .64);
+      border-color: rgba(255, 205, 205, .82);
+      box-shadow: 0 10px 24px rgba(150,40,40,.12);
+    }
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .row.right{justify-content:flex-end}
+    .split{display:grid; grid-template-columns: 1fr 1fr; gap: 10px;}
+    @media (max-width: 560px){ .split{grid-template-columns: 1fr} }
+    .divider{height:1px; background: rgba(255,255,255,.58); margin: 12px 0}
+
+    /* HOME */
+    .studyWrap{display:flex; flex-direction:column; gap:12px; min-height: calc(100vh - 150px);}
+    .studyTop{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+    .flash{
+      flex: 1 1 auto;
+      border-radius: 30px;
+      padding: 26px 18px;
+      min-height: 320px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      gap: 12px;
+      background:
+        radial-gradient(820px 300px at 50% 0%, rgba(255,255,255,.78), rgba(255,255,255,.14)),
+        linear-gradient(135deg, rgba(255,255,255,.38), rgba(255,255,255,.14));
+      border: 1px solid rgba(255,255,255,.76);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: relative;
+      overflow:hidden;
+    }
+    .flash:before{
+      content:"";
+      position:absolute; inset:-80px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.62), transparent 55%),
+        radial-gradient(circle at 70% 65%, rgba(233,230,255,.38), transparent 60%);
+      opacity:.85;
+      pointer-events:none;
+    }
+    .flash > *{position:relative; z-index:1}
+    .meta{font-size: 12px; color: rgba(11,36,64,.70)}
+    .front{font-size: 34px; font-weight: 970; letter-spacing:.2px}
+    .back{font-size: 20px; font-weight: 930; color: rgba(11,36,64,.84); display:none; white-space: pre-wrap; line-height:1.55;}
+
+    /* DAYS */
+    .daysGrid{
+      display:grid;
+      grid-template-columns: repeat(6, minmax(0,1fr));
+      gap: 8px;
+    }
+    @media (max-width: 980px){ .daysGrid{grid-template-columns: repeat(5, minmax(0,1fr));} }
+    @media (max-width: 820px){ .daysGrid{grid-template-columns: repeat(4, minmax(0,1fr));} }
+    @media (max-width: 620px){ .daysGrid{grid-template-columns: repeat(3, minmax(0,1fr));} }
+
+    .dayChip{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.74);
+      background: rgba(255,255,255,.30);
+      box-shadow: 0 10px 22px rgba(0,60,120,.12);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      user-select:none;
+    }
+    .dayChip label{display:flex; align-items:center; gap:8px; font-weight: 930; font-size: 13px}
+    .dayChip input{width:18px; height:18px}
+    .dayChip .count{font-size: 12px; color: rgba(11,36,64,.70)}
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      overflow:hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.62);
+      background: rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    th, td{
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.44);
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th{font-size:12px; text-align:left; color: rgba(11,36,64,.78)}
+    tr:last-child td{border-bottom:none}
+    .miniBtn{padding: 7px 10px; border-radius: 14px; font-size: 12px; font-weight:950; box-shadow: none;}
+    .toast{
+      position: fixed; right: 18px; bottom: 18px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(255,255,255,.90);
+      box-shadow: var(--shadow);
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: rgba(11,36,64,.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display:none;
+      z-index: 60;
+      max-width: 360px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="name">Siyoon's VOCARCHIVE</div>
+        <div class="sub">glass study vault</div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" id="tabHome">home</button>
+        <button class="tab" id="tabDays">days</button>
+        <button class="tab" id="tabList">list</button>
+        <span class="pill" id="pillKpi">—</span>
+      </div>
+    </header>
 
-<header>
-  <div><b>VOCARCHIVE</b></div>
-  <div>
-    <button class="tab active" onclick="setTab('home')" id="tabHome">home</button>
-    <button class="tab" onclick="setTab('days')" id="tabDays">days</button>
-    <button class="tab" onclick="setTab('list')" id="tabList">list</button>
+    <!-- HOME -->
+    <main id="viewHome" class="card">
+      <div class="studyWrap">
+        <div class="studyTop">
+          <div class="row" style="flex:1 1 560px; min-width:280px">
+            <select id="source" style="max-width:240px">
+              <option value="days">days</option>
+              <option value="list">list</option>
+              <option value="both">both</option>
+            </select>
+            <span class="pill" id="pillDays">day 0 selected</span>
+          </div>
+          <div class="row right">
+            <button class="btnPrimary" id="btnStart">start</button>
+            <button class="btnSoft" id="btnRandom100">random 100</button>
+          </div>
+        </div>
+
+        <div class="flash">
+          <div class="meta" id="metaLine"></div>
+          <div class="front" id="frontText">Siyoon's VOCARCHIVE</div>
+          <div class="back" id="backText"></div>
+        </div>
+
+        <div class="row right">
+          <button class="btnGhost" id="btnPrev">before</button>
+          <button class="btnPrimary" id="btnFlip" style="min-width:160px">flip</button>
+          <button class="btnGhost" id="btnNext">next</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="sessionPill">—</span>
+          <span class="pill">Space=flip · N=next · B=before</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- DAYS -->
+    <section id="viewDays" class="card" style="display:none">
+      <div class="row" style="justify-content:space-between">
+        <div class="row" style="gap:8px">
+          <span class="pill" id="daysKpi">—</span>
+        </div>
+        <div class="row right">
+          <button class="miniBtn btnGhost" id="btnDaysAll">전체 선택</button>
+          <button class="miniBtn btnGhost" id="btnDaysClear">선택 초기화</button>
+          <button class="miniBtn btnPrimary" id="btnStudyGo">study!</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="daysGrid" id="daysGrid"></div>
+
+      <div class="divider"></div>
+
+      <div class="row" style="justify-content:space-between; gap:10px;">
+        <div style="flex:1 1 280px">
+          <input id="daysSearch" placeholder="preview search" />
+        </div>
+        <span class="pill" id="daysPreviewPill">preview 0</span>
+      </div>
+
+      <div style="overflow:auto; margin-top:10px">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:45%">word</th>
+              <th style="width:55%">meaning</th>
+            </tr>
+          </thead>
+          <tbody id="daysTbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- LIST -->
+    <section id="viewList" class="card" style="display:none">
+      <div class="row" style="justify-content:space-between">
+        <div class="row" style="gap:8px">
+          <span class="pill" id="listKpi">—</span>
+        </div>
+        <div class="row right">
+          <button class="miniBtn btnGhost" id="btnBackup">backup</button>
+          <button class="miniBtn btnGhost" id="btnRestore">restore</button>
+          <button class="miniBtn btnGhost" id="btnExportCSV">csv</button>
+          <button class="miniBtn btnDanger" id="btnWipe">wipe</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="split">
+        <input id="inEN" placeholder="word (e.g., emaciated / per se)" />
+        <input id="inKO" placeholder="meaning (e.g., 야윈, 수척한)" />
+      </div>
+
+      <div class="row right" style="margin-top:10px">
+        <button class="btnPrimary" id="btnAdd">add</button>
+        <button class="btnGhost" id="btnClearInputs">clear</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row" style="justify-content:space-between; gap:10px;">
+        <div style="flex:1 1 280px">
+          <input id="search" placeholder="search" />
+        </div>
+        <span class="pill">paste: word | meaning</span>
+      </div>
+
+      <textarea id="bulkArea" placeholder="surly | 무례한
+make do with | ~으로 임시 변통하다, 때우다"></textarea>
+
+      <div class="row right" style="margin-top:10px">
+        <button class="btnGhost" id="btnPreview">preview</button>
+        <button class="btnPrimary" id="btnImport">import</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="overflow:auto; margin-top:10px">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:45%">word</th>
+              <th style="width:45%">meaning</th>
+              <th style="width:10%">manage</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
   </div>
-</header>
 
-<div id="home" class="card">
-  <div>
-    <button onclick="start()">start</button>
-    <button onclick="random100()">random</button>
-  </div>
+  <div class="toast" id="toast"></div>
+  <input type="file" id="fileRestore" accept="application/json" style="display:none" />
 
-  <div class="flash" id="card">VOCARCHIVE</div>
+  <script>
+    const STORAGE_KEY = "vocarchive_list_v1";
+    const DAYS_URL = "days.json";
+    const $ = (id) => document.getElementById(id);
+    const now = () => Date.now();
+    const norm = (s) => (s ?? "").toString().trim();
 
-  <div>
-    <button onclick="prev()">before</button>
-    <button onclick="flip()">flip</button>
-    <button onclick="next()">next</button>
-  </div>
-</div>
+    const state = {
+      daysData: null,
+      daysLoaded: false,
+      selectedDays: new Set(),
+      my: { version: 1, createdAt: now(), cards: [] },
+      session: [],
+      idx: 0,
+      showingBack: false
+    };
 
-<div id="days" class="card hidden">
-  <div>
-    <button onclick="selectAll()">전체</button>
-    <button onclick="clearAll()">초기화</button>
-  </div>
-  <div class="days-grid" id="daysGrid"></div>
-</div>
-
-<div id="list" class="card hidden">
-  <input id="word" placeholder="word">
-  <input id="meaning" placeholder="meaning">
-  <button onclick="add()">add</button>
-</div>
-
-<script>
-let daysData={};
-let selectedDays=new Set();
-let session=[];
-let index=0;
-let flipped=false;
-
-fetch("days.json")
-.then(r=>r.json())
-.then(data=>{
-  daysData=data;
-  renderDays();
-});
-
-function renderDays(){
-  const grid=document.getElementById("daysGrid");
-  for(let i=1;i<=60;i++){
-    const key="day"+i;
-    const div=document.createElement("div");
-    div.innerHTML=`<label><input type="checkbox" value="${key}"> ${key}</label>`;
-    grid.appendChild(div);
-  }
-  grid.querySelectorAll("input").forEach(cb=>{
-    cb.onchange=()=>{
-      cb.checked?selectedDays.add(cb.value):selectedDays.delete(cb.value);
+    function toast(msg){
+      const t = $("toast");
+      t.textContent = msg;
+      t.style.display = "block";
+      clearTimeout(toast._tm);
+      toast._tm = setTimeout(()=>{ t.style.display="none"; }, 1400);
     }
-  });
-}
+    function uid(){
+      return "c_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+    }
 
-function buildPool(){
-  let pool=[];
-  selectedDays.forEach(d=>{
-    (daysData[d]||[]).forEach(w=>pool.push(w));
-  });
-  return pool;
-}
+    function loadMy(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return;
+        const obj = JSON.parse(raw);
+        if(obj && Array.isArray(obj.cards)) state.my = obj;
+      }catch(_){}
+    }
+    function saveMy(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state.my)); }
 
-function start(){
-  session=shuffle(buildPool());
-  index=0;
-  flipped=false;
-  show();
-}
+    async function loadDays(){
+      try{
+        const res = await fetch(DAYS_URL, { cache: "no-cache" });
+        if(!res.ok) throw new Error("fetch_failed");
+        const obj = await res.json();
+        state.daysData = obj && typeof obj === "object" ? obj : {};
+        state.daysLoaded = true;
+      }catch(_){
+        state.daysData = {};
+        state.daysLoaded = false;
+      }
+      renderDaysGrid();
+      renderDaysPreview();
+      updatePills();
+    }
 
-function random100(){
-  let pool=shuffle(buildPool());
-  session=pool.slice(0,100);
-  index=0;
-  flipped=false;
-  show();
-}
+    function dayKey(i){ return "day" + i; }
+    function getDayCards(key){
+      const d = state.daysData;
+      const arr = d && Array.isArray(d[key]) ? d[key] : [];
+      return arr;
+    }
 
-function show(){
-  if(session.length===0){
-    document.getElementById("card").innerText="VOCARCHIVE";
-    return;
-  }
-  const word=session[index];
-  document.getElementById("card").innerText=flipped?word.meaning:word.word;
-}
+    function selectedDaysWordCount(){
+      if(!state.daysLoaded) return 0;
+      let n = 0;
+      for(const k of state.selectedDays) n += getDayCards(k).length;
+      return n;
+    }
 
-function flip(){
-  flipped=!flipped;
-  show();
-}
+    function updatePills(){
+      const myTotal = state.my.cards.length;
+      const sel = state.selectedDays.size;
+      $("pillDays").textContent = `day ${sel} selected`;
+      $("pillKpi").textContent = `days · ${sel}  |  list · ${myTotal}`;
+      $("daysKpi").textContent = `selected ${sel} · words ${selectedDaysWordCount()}`;
+      $("listKpi").textContent = `total ${myTotal}`;
+      $("sessionPill").textContent = state.session.length ? `${state.idx+1}/${state.session.length}` : "—";
+    }
 
-function next(){
-  if(index<session.length-1){
-    index++;
-    flipped=false;
-    show();
-  }
-}
+    function setTab(which){
+      const showHome = which === "home";
+      const showDays = which === "days";
+      const showList = which === "list";
+      $("viewHome").style.display = showHome ? "block" : "none";
+      $("viewDays").style.display = showDays ? "block" : "none";
+      $("viewList").style.display = showList ? "block" : "none";
 
-function prev(){
-  if(index>0){
-    index--;
-    flipped=false;
-    show();
-  }
-}
+      $("tabHome").classList.toggle("active", showHome);
+      $("tabDays").classList.toggle("active", showDays);
+      $("tabList").classList.toggle("active", showList);
 
-function shuffle(arr){
-  return arr.sort(()=>Math.random()-0.5);
-}
+      window.scrollTo({top:0, behavior:"smooth"});
+      if(showDays) renderDaysPreview();
+    }
 
-function setTab(tab){
-  document.getElementById("home").classList.add("hidden");
-  document.getElementById("days").classList.add("hidden");
-  document.getElementById("list").classList.add("hidden");
-  document.getElementById(tab).classList.remove("hidden");
-}
+    /* LIST */
+    function safeText(s){ return (s ?? "").toString().replace(/[<>]/g, c => c === "<" ? "&lt;" : "&gt;"); }
 
-function selectAll(){
-  selectedDays.clear();
-  document.querySelectorAll("#daysGrid input").forEach(cb=>{
-    cb.checked=true;
-    selectedDays.add(cb.value);
-  });
-}
+    function renderMyTable(){
+      const q = norm($("search").value).toLowerCase();
+      let list = [...state.my.cards];
+      if(q) list = list.filter(c => (c.en + " " + c.ko).toLowerCase().includes(q));
+      list.sort((a,b)=> (b.createdAt ?? 0) - (a.createdAt ?? 0));
 
-function clearAll(){
-  selectedDays.clear();
-  document.querySelectorAll("#daysGrid input").forEach(cb=>{
-    cb.checked=false;
-  });
-}
+      const tbody = $("tbody");
+      tbody.innerHTML = "";
+      if(list.length === 0){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="3" style="color:rgba(11,36,64,.6)">empty</td>`;
+        tbody.appendChild(tr);
+        return;
+      }
+      for(const c of list){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><b>${safeText(c.en)}</b></td>
+          <td>${safeText(c.ko)}</td>
+          <td style="white-space:nowrap">
+            <button class="miniBtn btnGhost" data-act="edit" data-id="${c.id}">edit</button>
+            <button class="miniBtn btnDanger" data-act="del" data-id="${c.id}">del</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+      tbody.querySelectorAll("button[data-act]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const id = btn.getAttribute("data-id");
+          const act = btn.getAttribute("data-act");
+          if(act === "del") delMyCard(id);
+          if(act === "edit") editMyCard(id);
+        });
+      });
+    }
 
-function add(){
-  const w=document.getElementById("word").value.trim();
-  const m=document.getElementById("meaning").value.trim();
-  if(!w||!m)return;
-  if(!daysData["custom"]) daysData["custom"]=[];
-  daysData["custom"].push({word:w,meaning:m});
-}
-</script>
+    function addMyCard(en, ko){
+      en = norm(en); ko = norm(ko);
+      if(!en || !ko) return false;
+      const dup = state.my.cards.find(c => norm(c.en).toLowerCase()===en.toLowerCase() && norm(c.ko)===ko);
+      if(dup) return "dup";
+      state.my.cards.push({ id: uid(), en, ko, createdAt: now() });
+      saveMy();
+      return true;
+    }
+    function delMyCard(id){
+      const idx = state.my.cards.findIndex(c=>c.id===id);
+      if(idx < 0) return;
+      state.my.cards.splice(idx,1);
+      saveMy();
+      updatePills();
+      renderMyTable();
+      toast("deleted");
+    }
+    function editMyCard(id){
+      const c = state.my.cards.find(x=>x.id===id);
+      if(!c) return;
+      const en = prompt("word", c.en);
+      if(en === null) return;
+      const ko = prompt("meaning", c.ko);
+      if(ko === null) return;
+      c.en = norm(en);
+      c.ko = norm(ko);
+      saveMy();
+      updatePills();
+      renderMyTable();
+      toast("saved");
+    }
 
+    function parseBulk(text){
+      const raw = (text ?? "").toString().trim();
+      if(!raw) return { rows: [] };
+      const lines = raw.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+      const parsed = [];
+      for(const line of lines){
+        if(line.includes("|")){
+          const idx = line.indexOf("|");
+          const en = line.slice(0, idx).trim();
+          const ko = line.slice(idx+1).trim();
+          if(en && ko) parsed.push({ en, ko });
+          continue;
+        }
+        const mK = line.match(/^(.+?)(\s*)([가-힣].*)$/);
+        if(mK){
+          const en = mK[1].trim();
+          const ko = mK[3].trim();
+          if(en && ko) parsed.push({ en, ko });
+        }
+      }
+      return { rows: parsed };
+    }
+
+    function previewBulk(){
+      const { rows } = parseBulk($("bulkArea").value);
+      const sample = rows.slice(0,8).map((r,i)=>`${i+1}. ${r.en} | ${r.ko}`).join("\n");
+      alert(`${sample || "(empty)"}\n\ntotal ${rows.length}`);
+    }
+    function importBulk(){
+      const { rows } = parseBulk($("bulkArea").value);
+      if(rows.length === 0){ toast("nothing"); return; }
+      let ok=0, dup=0;
+      for(const r of rows){
+        const res = addMyCard(r.en, r.ko);
+        if(res === true) ok++;
+        else if(res === "dup") dup++;
+      }
+      updatePills();
+      renderMyTable();
+      toast(`+${ok}${dup?` (dup ${dup})`:""}`);
+    }
+
+    /* DAYS */
+    function renderDaysGrid(){
+      const grid = $("daysGrid");
+      grid.innerHTML = "";
+      for(let i=1;i<=60;i++){
+        const key = dayKey(i);
+        const count = state.daysLoaded ? getDayCards(key).length : 0;
+        const checked = state.selectedDays.has(key);
+        const el = document.createElement("div");
+        el.className = "dayChip";
+        el.innerHTML = `
+          <label>
+            <input type="checkbox" data-day="${key}" ${checked ? "checked":""} ${state.daysLoaded ? "" : "disabled"} />
+            <span>${key}</span>
+          </label>
+          <span class="count">${count}</span>
+        `;
+        grid.appendChild(el);
+      }
+      grid.querySelectorAll('input[type="checkbox"][data-day]').forEach(cb=>{
+        cb.addEventListener("change", ()=>{
+          const k = cb.getAttribute("data-day");
+          if(cb.checked) state.selectedDays.add(k);
+          else state.selectedDays.delete(k);
+          updatePills();
+          renderDaysPreview();
+        });
+      });
+      updatePills();
+    }
+
+    function setAllDays(on){
+      if(!state.daysLoaded) return;
+      if(on){
+        for(let i=1;i<=60;i++) state.selectedDays.add(dayKey(i));
+      }else{
+        state.selectedDays.clear();
+      }
+      renderDaysGrid();
+      renderDaysPreview();
+      updatePills();
+    }
+
+    function getSelectedDaysCardsFlat(){
+      if(!state.daysLoaded) return [];
+      const cards = [];
+      for(const k of state.selectedDays){
+        const arr = getDayCards(k);
+        for(const it of arr){
+          const w = norm(it.word);
+          const m = norm(it.meaning);
+          if(w && m) cards.push({ en:w, ko:m, _src:"days", _day:k });
+        }
+      }
+      return cards;
+    }
+
+    function renderDaysPreview(){
+      const tbody = $("daysTbody");
+      tbody.innerHTML = "";
+      const q = norm($("daysSearch").value).toLowerCase();
+      let list = getSelectedDaysCardsFlat();
+      if(q) list = list.filter(x => (x.en + " " + x.ko).toLowerCase().includes(q));
+      $("daysPreviewPill").textContent = `preview ${list.length}`;
+
+      if(list.length === 0){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="2" style="color:rgba(11,36,64,.6)">empty</td>`;
+        tbody.appendChild(tr);
+        return;
+      }
+      const max = Math.min(200, list.length);
+      for(let i=0;i<max;i++){
+        const c = list[i];
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td><b>${safeText(c.en)}</b></td><td>${safeText(c.ko)}</td>`;
+        tbody.appendChild(tr);
+      }
+      if(list.length > max){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="2" style="color:rgba(11,36,64,.6)">+${list.length - max} more…</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+
+    /* HOME flashcards (EN -> KO only) */
+    function shuffleInPlace(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+      }
+      return arr;
+    }
+
+    function buildPoolFromSource(){
+      const src = $("source").value;
+      let pool = [];
+      if(src === "days" || src === "both") pool = pool.concat(getSelectedDaysCardsFlat());
+      if(src === "list" || src === "both") pool = pool.concat(state.my.cards.map(c=>({ en:c.en, ko:c.ko, _src:"list" })));
+      return pool;
+    }
+
+    function startSession(mode){
+      const pool = buildPoolFromSource();
+      if(pool.length === 0){
+        state.session = [];
+        state.idx = 0;
+        state.showingBack = false;
+        $("metaLine").textContent = "";
+        $("frontText").textContent = "Siyoon's VOCARCHIVE";
+        $("backText").textContent = "";
+        $("backText").style.display = "none";
+        updatePills();
+        toast("empty");
+        return;
+      }
+
+      if(mode === "random100"){
+        shuffleInPlace(pool);
+        state.session = pool.slice(0, Math.min(100, pool.length));
+      }else{
+        shuffleInPlace(pool);
+        state.session = pool;
+      }
+
+      state.idx = 0;
+      state.showingBack = false;
+      showCurrent(true);
+      toast(`start ${state.session.length}`);
+    }
+
+    function showCurrent(resetFlip){
+      const c = state.session[state.idx];
+      if(!c){
+        $("metaLine").textContent = "";
+        $("frontText").textContent = "DONE";
+        $("backText").textContent = "";
+        $("backText").style.display = "none";
+        updatePills();
+        return;
+      }
+      if(resetFlip) state.showingBack = false;
+      $("metaLine").textContent = `${state.idx+1} / ${state.session.length}`;
+
+      $("frontText").textContent = c.en;
+      $("backText").textContent = c.ko;
+      $("backText").style.display = state.showingBack ? "block" : "none";
+      $("btnFlip").textContent = state.showingBack ? "hide" : "flip";
+      updatePills();
+    }
+
+    function flip(){
+      if(state.session.length === 0) return;
+      state.showingBack = !state.showingBack;
+      $("backText").style.display = state.showingBack ? "block" : "none";
+      $("btnFlip").textContent = state.showingBack ? "hide" : "flip";
+    }
+
+    function nextCard(){
+      if(state.session.length === 0) return;
+      if(state.idx < state.session.length - 1){
+        state.idx++;
+        state.showingBack = false;
+        showCurrent(true);
+      }else{
+        $("metaLine").textContent = "";
+        $("frontText").textContent = "DONE";
+        $("backText").textContent = "";
+        $("backText").style.display = "none";
+        updatePills();
+        toast("done");
+      }
+    }
+
+    function prevCard(){
+      if(state.session.length === 0) return;
+      if(state.idx > 0){
+        state.idx--;
+        state.showingBack = false;
+        showCurrent(true);
+      }
+    }
+
+    function download(filename, content, mime="application/octet-stream"){
+      const blob = new Blob([content], {type: mime});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
+    }
+    function fmtDate(ts){
+      const d = new Date(ts);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const da = String(d.getDate()).padStart(2,"0");
+      return `${y}-${m}-${da}`;
+    }
+    function backup(){
+      download(`VOCARCHIVE_backup_${fmtDate(now())}.json`, JSON.stringify(state.my, null, 2), "application/json");
+      toast("backup");
+    }
+    function restoreFromFile(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const obj = JSON.parse(reader.result);
+          if(!obj || !Array.isArray(obj.cards)) throw new Error("invalid");
+          state.my = obj;
+          saveMy();
+          updatePills();
+          renderMyTable();
+          toast("restored");
+        }catch(_){
+          alert("restore failed");
+        }
+      };
+      reader.readAsText(file);
+    }
+    function exportCSV(){
+      const rows = [];
+      rows.push(["word","meaning"].join(","));
+      for(const c of state.my.cards){
+        rows.push(`"${(c.en||"").replaceAll('"','""')}","${(c.ko||"").replaceAll('"','""')}"`);
+      }
+      download(`VOCARCHIVE_${fmtDate(now())}.csv`, rows.join("\n"), "text/csv;charset=utf-8");
+      toast("csv");
+    }
+    function wipeAll(){
+      if(!confirm("wipe all?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state.my = { version: 1, createdAt: now(), cards: [] };
+      updatePills();
+      renderMyTable();
+      toast("wiped");
+    }
+
+    function init(){
+      loadMy();
+      updatePills();
+      renderMyTable();
+
+      $("tabHome").addEventListener("click", ()=>setTab("home"));
+      $("tabDays").addEventListener("click", ()=>setTab("days"));
+      $("tabList").addEventListener("click", ()=>setTab("list"));
+
+      $("btnStart").addEventListener("click", ()=>startSession("start"));
+      $("btnRandom100").addEventListener("click", ()=>startSession("random100"));
+
+      $("btnFlip").addEventListener("click", flip);
+      $("btnNext").addEventListener("click", nextCard);
+      $("btnPrev").addEventListener("click", prevCard);
+
+      $("btnDaysAll").addEventListener("click", ()=>setAllDays(true));
+      $("btnDaysClear").addEventListener("click", ()=>setAllDays(false));
+      $("btnStudyGo").addEventListener("click", ()=>setTab("home"));
+      $("daysSearch").addEventListener("input", renderDaysPreview);
+
+      $("btnAdd").addEventListener("click", ()=>{
+        const res = addMyCard($("inEN").value, $("inKO").value);
+        if(res === true){
+          $("inEN").value = "";
+          $("inKO").value = "";
+          saveMy();
+          updatePills();
+          renderMyTable();
+          toast("added");
+          $("inEN").focus();
+        }else if(res === "dup"){
+          toast("dup");
+        }else{
+          toast("fill");
+        }
+      });
+      $("btnClearInputs").addEventListener("click", ()=>{
+        $("inEN").value = "";
+        $("inKO").value = "";
+        toast("cleared");
+      });
+
+      $("btnPreview").addEventListener("click", previewBulk);
+      $("btnImport").addEventListener("click", importBulk);
+      $("search").addEventListener("input", renderMyTable);
+
+      $("btnBackup").addEventListener("click", backup);
+      $("btnRestore").addEventListener("click", ()=>$("fileRestore").click());
+      $("fileRestore").addEventListener("change", (e)=>{
+        const file = e.target.files?.[0];
+        if(file) restoreFromFile(file);
+        e.target.value = "";
+      });
+      $("btnExportCSV").addEventListener("click", exportCSV);
+      $("btnWipe").addEventListener("click", wipeAll);
+
+      document.addEventListener("keydown", (e)=>{
+        const homeVisible = $("viewHome").style.display !== "none";
+        if(!homeVisible) return;
+        if(e.key === " "){
+          e.preventDefault();
+          flip();
+        }
+        const k = e.key.toLowerCase();
+        if(k === "n") nextCard();
+        if(k === "b") prevCard();
+      });
+
+      loadDays();
+    }
+
+    init();
+  </script>
 </body>
 </html>
